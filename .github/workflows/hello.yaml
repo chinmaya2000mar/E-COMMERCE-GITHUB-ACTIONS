@@ -1,19 +1,42 @@
-name: Hello
+name: Deploy Website
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  greet:
+  deploy:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Say hello
-        run: echo "hello dosto"
-  repo-name:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Print Repository Name
-          run: echo "The repository name is ${{ github.event.repository.name }}"
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Show Website URL
+        run: |
+          echo "## 🚀 Website Deployed Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🌐 Access your website:" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
