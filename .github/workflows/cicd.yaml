@@ -28,3 +28,9 @@ jobs:
     steps:
        - name: build docker container
          run: echo "docker container build"
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [code,build]
+    steps:
+       - name: deploy the container
+         run: echo "docker container run"
