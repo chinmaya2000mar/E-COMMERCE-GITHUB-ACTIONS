@@ -1,0 +1,11 @@
+name: repo checks
+on: push
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+       - name: Show version
+         run: python3 --version
+         
+       - name: List files
+         run: ls -la
